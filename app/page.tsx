@@ -1,101 +1,102 @@
-"use client"
-import { useState, useEffect } from 'react'
-import { Link2, Plus, Copy, ExternalLink, BarChart3, Trash2 } from 'lucide-react'
-import axios from 'axios'
+import Link from 'next/link';
+import { ArrowRight, BarChart3, Zap, ShieldCheck, Play } from "lucide-react";
 
-export default function Dashboard() {
-  const [url, setUrl] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [links, setLinks] = useState([]) // Aquí guardaremos lo que traiga la API
-
-  const API_URL = process.env.NEXT_PUBLIC_API_URL
-  
-  useEffect(()=>{
-    console.log("API: ",process.env.NEXT_PUBLIC_API_URL);
-  },[])
-
-  const handleShorten = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    
-    try {
-      // Llamada real a tu endpoint de Go en Render
-      const res = await axios.post(`${API_URL}/shorten`, { 
-        original_url: url 
-      })
-      
-      // Si todo sale bien, podrías limpiar el input o recargar la lista
-      setUrl('')
-      alert("¡Link creado con éxito!")
-    } catch (error) {
-      console.error("Error al crear el link:", error)
-      alert("Hubo un error al conectar con el backend.")
-    } finally {
-      setLoading(false)
-    }
-  }
-
+export default function LandingPage() {
   return (
-    <div className="max-w-4xl mx-auto py-10 px-4">
-      <header className="mb-10">
-        <h1 className="text-3xl font-bold tracking-tight text-white">GhostTech <span className="text-blue-500">Links</span></h1>
-        <p className="text-slate-400 mt-2">Gestiona tus URLs acortadas y revisa tus estadísticas.</p>
-      </header>
+    <div className="min-h-screen bg-slate-950 text-white font-sans selection:bg-blue-500/30">
+      {/* Luces de fondo consistentes */}
+      <div className="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-blue-900/20 blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-900/20 blur-[120px]" />
+      </div>
 
-      {/* Formulario de Acortado */}
-      <section className="mb-12">
-        <form onSubmit={handleShorten} className="flex gap-3 p-2 bg-slate-900 border border-slate-800 rounded-2xl shadow-xl focus-within:border-blue-500/50 transition-all">
-          <div className="flex-1 flex items-center gap-3 px-4">
-            <Link2 className="text-slate-500" size={22} />
-            <input 
-              type="url" 
-              placeholder="Pega tu link largo aquí (https://...)"
-              className="bg-transparent border-none outline-none w-full text-slate-100 placeholder:text-slate-600 py-3"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              required
-            />
-          </div>
-          <button 
-            type="submit"
-            disabled={loading}
-            className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-xl font-semibold transition-all flex items-center gap-2 disabled:opacity-50"
-          >
-            {loading ? 'Procesando...' : <><Plus size={18} /> Acortar</>}
+      {/* Navbar Minimalista */}
+      <nav className="relative z-10 flex justify-between items-center p-8 max-w-7xl mx-auto">
+        <div className="text-2xl font-black tracking-tighter italic">
+          GHST<span className="text-blue-500">TECH</span>
+        </div>
+        <div className="flex items-center gap-6">
+          <Link href="/login" className="text-sm font-medium text-slate-400 hover:text-white transition">
+            Login
+          </Link>
+          <Link href="/register" className="bg-white text-black px-5 py-2.5 rounded-full text-sm font-bold hover:bg-blue-500 hover:text-white transition-all duration-300 shadow-lg shadow-white/5">
+            Get Started
+          </Link>
+        </div>
+      </nav>
+
+      <main className="relative z-10 flex flex-col items-center justify-center text-center px-6 py-24 lg:py-32">
+        {/* Badge Hero */}
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-medium mb-8 animate-fade-in">
+          <Zap size={14} />
+          <span>v2.0 ahora disponible para ingenieros</span>
+        </div>
+
+        <h1 className="text-6xl lg:text-8xl font-extrabold tracking-tight mb-8 leading-[1.1]">
+          Links más cortos,<br />
+          <span className="bg-gradient-to-r from-blue-400 to-indigo-500 bg-clip-text text-transparent">
+            impacto masivo.
+          </span>
+        </h1>
+        
+        <p className="text-lg text-slate-400 max-w-2xl mb-12 leading-relaxed">
+          Gestión de enlaces con arquitectura de alto rendimiento. 
+          Métricas en tiempo real y despliegue minimalista diseñado por ingenieros.
+        </p>
+        
+        <div className="flex flex-col sm:flex-row gap-5">
+          <Link href="/register" className="group bg-blue-600 text-white px-10 py-4 rounded-2xl font-bold text-lg hover:bg-blue-500 transition-all shadow-xl shadow-blue-900/30 flex items-center gap-2">
+            Comenzar Gratis
+            <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+          </Link>
+          <button className="flex items-center gap-2 border border-slate-800 bg-slate-900/50 backdrop-blur-md px-10 py-4 rounded-2xl font-bold text-lg hover:bg-slate-800 transition-all">
+            <Play size={18} fill="currentColor" />
+            Ver Demo
           </button>
-        </form>
+        </div>
+      </main>
+
+      {/* Feature Grid con Glassmorphism */}
+      <section className="relative z-10 py-24 px-6">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+          {[
+            { 
+              icon: <Zap className="text-blue-400" />, 
+              title: "Rápido", 
+              desc: "Infraestructura optimizada para una redirección casi instantánea en ms.",
+              step: "01"
+            },
+            { 
+              icon: <ShieldCheck className="text-indigo-400" />, 
+              title: "Seguro", 
+              desc: "Privacidad por diseño. Tus datos están cifrados y bajo tu control total.",
+              step: "02"
+            },
+            { 
+              icon: <BarChart3 className="text-blue-400" />, 
+              title: "Analítico", 
+              desc: "Métricas avanzadas de tráfico y origen con visualización técnica.",
+              step: "03"
+            }
+          ].map((feature, i) => (
+            <div key={i} className="group p-8 bg-slate-900/40 backdrop-blur-md border border-slate-800 rounded-3xl hover:border-blue-500/50 transition-all duration-500">
+              <div className="flex justify-between items-start mb-6">
+                <div className="p-3 bg-slate-950 rounded-2xl border border-slate-800 group-hover:scale-110 transition-transform">
+                  {feature.icon}
+                </div>
+                <span className="text-slate-700 font-mono text-sm">{feature.step}</span>
+              </div>
+              <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
+              <p className="text-slate-400 text-sm leading-relaxed">{feature.desc}</p>
+            </div>
+          ))}
+        </div>
       </section>
 
-      {/* Título de la lista */}
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-lg font-semibold text-slate-200">Enlaces Recientes</h2>
-      </div>
-
-      {/* Lista de Enlaces (Skeleton o Lista vacía por ahora) */}
-      <div className="space-y-4">
-        <div className="p-5 bg-slate-900/40 border border-slate-800/60 rounded-xl flex items-center justify-between group hover:border-slate-700 transition-all">
-          <div className="flex flex-col gap-1">
-            <span className="text-blue-400 font-medium text-lg flex items-center gap-2 cursor-pointer hover:underline">
-              ghost.tech/ejemplo <ExternalLink size={14} />
-            </span>
-            <span className="text-slate-500 text-sm truncate max-w-sm">
-              https://www.tu-url-muy-larga-que-viene-de-algun-lado.com
-            </span>
-          </div>
-          
-          <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-            <button className="p-2 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-white transition-colors" title="Copiar">
-              <Copy size={18} />
-            </button>
-            <button className="p-2 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-white transition-colors" title="Estadísticas">
-              <BarChart3 size={18} />
-            </button>
-            <button className="p-2 hover:bg-red-500/10 rounded-lg text-slate-400 hover:text-red-400 transition-colors" title="Eliminar">
-              <Trash2 size={18} />
-            </button>
-          </div>
-        </div>
-      </div>
+      {/* Footer simple */}
+      <footer className="relative z-10 border-t border-slate-900 py-12 text-center text-slate-600 text-sm">
+        <p>&copy; 2026 GhstTech. Built for performance.</p>
+      </footer>
     </div>
-  )
+  );
 }
