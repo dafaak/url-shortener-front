@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     
    <html lang="es" suppressHydrationWarning>
-  <body className="antialiased bg-white dark:bg-slate-950 transition-colors duration-500 min-h-screen relative">
+  <body className="antialiased ">
     {/* 1. Mover los gradientes aquí para que cubran TODO, incluyendo el área del Navbar */}
     <div className="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-blue-500/10 dark:bg-blue-900/20 blur-[120px]" />
@@ -37,7 +37,6 @@ export default function RootLayout({
 
     <Providers>
       <Navbar />
-      {/* 2. El main ahora es relativo para estar por encima de los gradientes pero debajo del nav */}
       <main className="pt-16"> 
         {children}
       </main>

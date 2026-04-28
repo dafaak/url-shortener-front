@@ -37,14 +37,14 @@ export default function LoginPage() {
   };
 
   return (
-<div className="relative min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 transition-colors duration-500 overflow-hidden">
+<div className="relative min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 transition-colors duration-500 overflow-hidden px-4">
   {/* Decoración de fondo dinámica */}
   <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-blue-500/10 dark:bg-blue-900/20 blur-[120px]" />
   <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-500/10 dark:bg-indigo-900/20 blur-[120px]" />
 
   <form 
     onSubmit={handleLogin} 
-    className="relative z-10 w-full max-w-md p-10 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl dark:shadow-blue-900/20 space-y-8 transition-all"
+    className="relative z-10 w-full max-w-md p-6 sm:p-10 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl space-y-8 transition-all"
   >
     <div className="text-center space-y-2">
       <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">

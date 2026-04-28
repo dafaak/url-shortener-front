@@ -15,7 +15,7 @@ export default function LandingPage() {
         {/* Badge Hero */}
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-600/10 border border-blue-600/20 text-blue-600 dark:text-blue-400 text-xs font-medium mb-8 animate-fade-in">
           <Zap size={14} />
-          <span>v2.0 ahora disponible para ingenieros</span>
+          <span>v1.0 ahora disponible</span>
         </div>
 
         <h1 className="text-6xl lg:text-8xl font-extrabold tracking-tight mb-8 leading-[1.1] text-slate-900 dark:text-white">
