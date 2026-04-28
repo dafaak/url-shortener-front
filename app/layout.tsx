@@ -1,6 +1,8 @@
+import { Navbar } from "@/components/shared/Navbar";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Providers } from "./providers/providers";
 
 
 const geistSans = Geist({
@@ -24,11 +26,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col bg-red-500">{children}</body>
-    </html>
+    
+   <html lang="es" suppressHydrationWarning>
+  <body className="antialiased bg-white dark:bg-slate-950 transition-colors duration-500 min-h-screen relative">
+    {/* 1. Mover los gradientes aquí para que cubran TODO, incluyendo el área del Navbar */}
+    <div className="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-blue-500/10 dark:bg-blue-900/20 blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-500/10 dark:bg-indigo-900/20 blur-[120px]" />
+    </div>
+
+    <Providers>
+      <Navbar />
+      {/* 2. El main ahora es relativo para estar por encima de los gradientes pero debajo del nav */}
+      <main className="pt-16"> 
+        {children}
+      </main>
+    </Providers>
+</body>
+</html>
+
   );
 }

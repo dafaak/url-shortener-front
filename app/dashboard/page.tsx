@@ -36,9 +36,9 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto py-10 px-4">
+    <div className="max-w-4xl mx-auto  py-10 px-4">
       <header className="mb-10">
-        <h1 className="text-3xl font-bold tracking-tight text-white">GhostTech <span className="text-blue-500">Links</span></h1>
+        
         <p className="text-slate-400 mt-2">Gestiona tus URLs acortadas y revisa tus estadísticas.</p>
       </header>
 
