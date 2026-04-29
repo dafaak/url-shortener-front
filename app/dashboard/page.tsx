@@ -4,14 +4,15 @@ import { ShortenForm } from '@/components/dashboard/ShortenForm'
 import { LinkCard } from '@/components/dashboard/LinkCard'
 import axios from 'axios'
 import api from '@/lib/api'
+import { Link } from '@/types/link'
 
 export default function Dashboard() {
-  const [links, setLinks] = useState([])
+  const [links, setLinks] = useState<Link[]>([])
   const [loading, setLoading] = useState(true)
 
   const fetchLinks = async () => {
     try {
-      const res = await api.get(`${process.env.NEXT_PUBLIC_API_URL}/api/my-links`)
+      const res = await api.get<Link[]>(`${process.env.NEXT_PUBLIC_API_URL}/api/my-links`)
       setLinks(res.data)
     } catch (err) {
       console.error(err)
@@ -19,6 +20,10 @@ export default function Dashboard() {
       setLoading(false)
     }
   }
+
+  const handleDeleteLink = (id: number) => {
+  setLinks(prevLinks => prevLinks.filter(link => link.id !== id));
+};
 
   useEffect(() => { fetchLinks() }, [])
 
@@ -61,7 +66,7 @@ export default function Dashboard() {
         ) : (
           <div className="grid gap-4">
             {links.length > 0 ? (
-              links.map((link: any) => <LinkCard key={link.id} link={link} />)
+              links.map((link: any) => <LinkCard key={link.id} link={link} onDeleteSuccess={handleDeleteLink}/>)
             ) : (
               /* Empty State con estilo minimalista */
               <div className="flex flex-col items-center justify-center py-20 px-4 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-3xl bg-slate-50/50 dark:bg-slate-900/20">
