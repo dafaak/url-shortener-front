@@ -6,7 +6,7 @@ import api from '@/lib/api';
 
 interface LinkCardProps {
   link: Link;
-  onDeleteSuccess: (id: number) => void; // Función para actualizar el estado local
+  onDeleteSuccess: (id: number) => void; 
 }
 
 export function LinkCard({ link, onDeleteSuccess }: LinkCardProps) {
@@ -25,16 +25,27 @@ export function LinkCard({ link, onDeleteSuccess }: LinkCardProps) {
     });
   };
 
-  const handleDelete = async () => {
-    if (!window.confirm("¿Eliminar este enlace y todas sus estadísticas?")) return;
-
-    try {
-      await api.delete(`/api/links/${link.id}`);
-      onDeleteSuccess(link.id); 
-    } catch (error) {
-      // Error manejado por el interceptor (404 o 500)
-    }
-  };
+  const handleDelete = () => {
+  toast("¿Eliminar este enlace?", {
+    description: "Esta acción borrará todas las estadísticas permanentemente.",
+    duration: Infinity, // No desaparece hasta que el usuario decida
+    action: {
+      label: "Eliminar",
+      onClick: async () => {
+        try {
+          await api.delete(`/api/links/${link.id}`);
+          onDeleteSuccess(link.id);
+        } catch (error) {
+          // Error manejado por el interceptor
+        }
+      },
+    },
+    cancel: {
+      label: "Cancelar",
+      onClick: () => {},
+    },
+  });
+};
 
   const handleStatsClick = () => {
   if (user?.plan === 'free') {
