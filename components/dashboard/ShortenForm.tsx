@@ -1,7 +1,7 @@
 "use client"
 import { useState } from 'react'
 import { Link2, Plus, Lock, Globe, EyeOff } from 'lucide-react'
-import axios from 'axios'
+import api from '@/lib/api'
 
 export function ShortenForm({ onLinkCreated }: { onLinkCreated: () => void }) {
   const [loading, setLoading] = useState(false)
@@ -17,7 +17,7 @@ export function ShortenForm({ onLinkCreated }: { onLinkCreated: () => void }) {
     e.preventDefault()
     setLoading(true)
     try {
-      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/shorten`, formData)
+      await api.post(`${process.env.NEXT_PUBLIC_API_URL}/api/shorten`, formData)
       setFormData({ url: '', custom_code: '', is_public: true })
       onLinkCreated()
     } catch (error) {
