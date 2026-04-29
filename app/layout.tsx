@@ -3,6 +3,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Providers } from "./providers/providers";
+import { Toaster } from "sonner";
 
 
 const geistSans = Geist({
@@ -40,6 +41,30 @@ export default function RootLayout({
       <main className="pt-16"> 
         {children}
       </main>
+      <Toaster 
+  position="bottom-right" 
+  theme="system" 
+  richColors={false}
+  toastOptions={{
+  
+    style: {
+      transition: 'all 0.5s ease',
+    },
+    classNames: {
+      
+      toast: "group !border-2 rounded-2xl p-4 flex items-center gap-3 backdrop-blur-md !bg-white dark:!bg-slate-950 shadow-lg",
+      
+      title: "!text-slate-900 dark:!text-white font-bold text-sm",
+      description: "!text-slate-500 dark:!text-slate-400 text-xs font-medium",
+      
+      success: "!border-blue-500/30",
+      error: "!border-red-500/30",
+      info: "!border-slate-200 dark:!border-slate-800",
+    
+      icon: "group-data-[type=success]:!text-blue-500 group-data-[type=error]:!text-red-500",
+    },
+  }}
+/>
     </Providers>
 </body>
 </html>

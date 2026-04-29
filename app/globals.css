@@ -2,13 +2,11 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  /* Modo Claro: Fondo blanco/grisáceo y texto oscuro */
   --background-rgb: 248, 250, 252; /* slate-50 */
   --foreground-rgb: 15, 23, 42;    /* slate-900 */
 }
 
 .dark {
-  /* Modo Oscuro: Fondo azul profundo y texto blanco */
   --background-rgb: 2, 6, 23;     /* slate-950 */
   --foreground-rgb: 255, 255, 255;
 }
@@ -16,12 +14,11 @@
 body {
   color: rgb(var(--foreground-rgb));
   background-color: rgb(var(--background-rgb));
-  /* Eliminamos el gradiente fijo para que el cambio de color sea instantáneo y limpio */
   min-height: 100vh;
   transition: background-color 0.5s ease, color 0.5s ease;
 }
 
-/* Si quieres mantener un toque de gradiente sutil que se adapte */
+
 @layer base {
   body {
     background-image: radial-gradient(
@@ -30,4 +27,19 @@ body {
       transparent
     );
   }
+}
+
+
+[data-sonner-toast] {
+  background-color: rgb(var(--toast-bg)) !important;
+  border-color: rgb(var(--toast-border)) !important;
+}
+
+[data-sonner-toast] [data-title] {
+  color: var(--normal-text) !important;
+}
+
+[data-sonner-toast] [data-description] {
+  color: var(--normal-text) !important;
+  opacity: 0.8;
 }
