@@ -1,6 +1,7 @@
 export interface Link {
   id: number;
   username: string;
+  alias:string;
   original_url: string;
   short_code: string;
   created_at: string;   // Viene como string ISO de Go

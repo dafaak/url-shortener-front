@@ -1,11 +1,11 @@
 "use client"
 import { useState } from 'react'
-import { Link2, Plus, Lock, Globe, EyeOff } from 'lucide-react'
+import { Link2, Plus, Lock, Tag, Globe, EyeOff } from 'lucide-react'
 import api from '@/lib/api'
 import { useUser } from '@/providers/UserProvider'
 
 export function ShortenForm({ onLinkCreated }: { onLinkCreated: () => void }) {
-  const { user } = useUser() // Obtenemos los datos reales del usuario
+  const { user } = useUser() 
   const [loading, setLoading] = useState(false)
   
   const isPremium = user?.plan === 'premium'
@@ -13,6 +13,7 @@ export function ShortenForm({ onLinkCreated }: { onLinkCreated: () => void }) {
   const [formData, setFormData] = useState({
     url: '',
     custom_code: '',
+    alias: '', 
     is_public: true
   })
 
@@ -22,11 +23,12 @@ export function ShortenForm({ onLinkCreated }: { onLinkCreated: () => void }) {
     try {
       const payload = {
         ...formData,
-        custom_code: isPremium ? formData.custom_code : ""
+        custom_code: isPremium ? formData.custom_code : "",
+        alias: formData.alias.trim() || null // Enviamos null si está vacío
       }
 
       await api.post('/api/shorten', payload)
-      setFormData({ url: '', custom_code: '', is_public: true })
+      setFormData({ url: '', custom_code: '', alias: '', is_public: true })
       onLinkCreated()
     } catch (error) {
       console.error("Error:", error)
@@ -37,6 +39,7 @@ export function ShortenForm({ onLinkCreated }: { onLinkCreated: () => void }) {
 
   return (
     <form onSubmit={handleShorten} className="space-y-4">
+      {/* Input Principal: URL */}
       <div className="flex flex-col md:flex-row gap-3 p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl focus-within:border-blue-500/50 transition-all">
         <div className="flex-1 flex items-center gap-3 px-4">
           <Link2 className="text-slate-400" size={20} />
@@ -57,38 +60,44 @@ export function ShortenForm({ onLinkCreated }: { onLinkCreated: () => void }) {
         </button>
       </div>
 
+      {/* Inputs Secundarios: Alias y Custom Code */}
       <div className="flex flex-wrap gap-4 px-2">
-        {/* Custom Code */}
+        
+        {/* Alias del Enlace*/}
         <div className="flex items-center gap-2 group">
-          <div className="relative">
+          <div className="relative flex items-center">
+            <Tag size={14} className="absolute left-3 text-slate-400" />
+            <input 
+              type="text" 
+              placeholder="Nombre del enlace (opcional)"
+              className="bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-lg pl-9 pr-3 py-1.5 text-sm outline-none focus:border-blue-500/50 transition-all w-64"
+              value={formData.alias}
+              onChange={(e) => setFormData({...formData, alias: e.target.value})}
+            />
+          </div>
+        </div>
+
+        {/* Custom Code (Solo Premium) */}
+        <div className="flex items-center gap-2 group">
+          <div className="relative flex items-center">
             <input 
               type="text" 
               disabled={!isPremium}
-              placeholder={isPremium ? "Alias personalizado" : "Alias (Solo Premium)"}
+              placeholder={isPremium ? "Slug personalizado (ej: mi-web)" : "Slug (Solo Premium)"}
               className={`bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-1.5 text-sm outline-none transition-all
-                ${isPremium ? 'focus:border-blue-500/50' : 'cursor-not-allowed opacity-70'}`}
+                ${isPremium ? 'focus:border-blue-500/50 w-64' : 'cursor-not-allowed opacity-70 w-52'}`}
               value={formData.custom_code}
               onChange={(e) => setFormData({...formData, custom_code: e.target.value})}
             />
             {!isPremium && (
               <Lock 
                 size={12} 
-                className="absolute right-2 top-2.5 text-slate-500 animate-pulse" 
-                title="Función disponible en el plan Premium"
+                className="absolute right-2 text-slate-500" 
               />
             )}
           </div>
         </div>
 
-        {/* Toggle Público/Privado */}
-        <button
-          type="button"
-          onClick={() => setFormData({...formData, is_public: !formData.is_public})}
-          className="flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-blue-500 transition-colors"
-        >
-          {formData.is_public ? <Globe size={16} /> : <EyeOff size={16} />}
-          {formData.is_public ? "Enlace Público" : "Enlace Privado"}
-        </button>
       </div>
     </form>
   )
