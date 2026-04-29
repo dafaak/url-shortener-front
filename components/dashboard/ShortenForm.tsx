@@ -2,10 +2,13 @@
 import { useState } from 'react'
 import { Link2, Plus, Lock, Globe, EyeOff } from 'lucide-react'
 import api from '@/lib/api'
+import { useUser } from '@/providers/UserProvider'
 
 export function ShortenForm({ onLinkCreated }: { onLinkCreated: () => void }) {
+  const { user } = useUser() // Obtenemos los datos reales del usuario
   const [loading, setLoading] = useState(false)
-  const [isPremium] = useState(false) // Esto vendría de tu sesión/user
+  
+  const isPremium = user?.plan === 'premium'
   
   const [formData, setFormData] = useState({
     url: '',
@@ -17,7 +20,12 @@ export function ShortenForm({ onLinkCreated }: { onLinkCreated: () => void }) {
     e.preventDefault()
     setLoading(true)
     try {
-      await api.post(`${process.env.NEXT_PUBLIC_API_URL}/api/shorten`, formData)
+      const payload = {
+        ...formData,
+        custom_code: isPremium ? formData.custom_code : ""
+      }
+
+      await api.post('/api/shorten', payload)
       setFormData({ url: '', custom_code: '', is_public: true })
       onLinkCreated()
     } catch (error) {
@@ -50,29 +58,36 @@ export function ShortenForm({ onLinkCreated }: { onLinkCreated: () => void }) {
       </div>
 
       <div className="flex flex-wrap gap-4 px-2">
-        {/* Custom Code - Premium Only */}
+        {/* Custom Code */}
         <div className="flex items-center gap-2 group">
           <div className="relative">
             <input 
               type="text" 
               disabled={!isPremium}
-              placeholder={isPremium ? "Alias personalizado" : "Alias (Premium)"}
-              className="bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-1.5 text-sm outline-none focus:border-blue-500/50 disabled:cursor-not-allowed"
+              placeholder={isPremium ? "Alias personalizado" : "Alias (Solo Premium)"}
+              className={`bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-1.5 text-sm outline-none transition-all
+                ${isPremium ? 'focus:border-blue-500/50' : 'cursor-not-allowed opacity-70'}`}
               value={formData.custom_code}
               onChange={(e) => setFormData({...formData, custom_code: e.target.value})}
             />
-            {!isPremium && <Lock size={12} className="absolute right-2 top-2.5 text-slate-500" />}
+            {!isPremium && (
+              <Lock 
+                size={12} 
+                className="absolute right-2 top-2.5 text-slate-500 animate-pulse" 
+                title="Función disponible en el plan Premium"
+              />
+            )}
           </div>
         </div>
 
-        {/* Public/Private Toggle */}
+        {/* Toggle Público/Privado */}
         <button
           type="button"
           onClick={() => setFormData({...formData, is_public: !formData.is_public})}
           className="flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-blue-500 transition-colors"
         >
           {formData.is_public ? <Globe size={16} /> : <EyeOff size={16} />}
-          {formData.is_public ? "Público" : "Privado"}
+          {formData.is_public ? "Enlace Público" : "Enlace Privado"}
         </button>
       </div>
     </form>
