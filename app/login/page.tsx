@@ -4,41 +4,51 @@ import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 import api from '@/lib/api'; // Ajusta la ruta según tu alias
 import { User, Lock, Loader2, LogIn } from "lucide-react";
+import { useUser } from '@/providers/UserProvider';
+
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { setUser } = useUser();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      // Endpoint que definimos en Go (ej. /login o /auth/login)
+      
       const { data } = await api.post('/login', { email, password });
       
-      // Guardamos el JWT
       Cookies.set('auth_token', data.token, { 
-        expires: 7, // La cookie expira en 7 días
-        path: '/',  // Disponible en toda la app
-        secure: process.env.NODE_ENV === 'production', // Solo HTTPS en producción
+        expires: 7, 
+        path: '/',  
+        secure: process.env.NODE_ENV === 'production', 
         sameSite: 'strict'
       });
+
+      const userProfile = {
+        username: data.username,
+        plan: data.plan || 'free' // 'free' por defecto si no viene del back
+      };
       
-      router.push('/'); // Al Dashboard
+      localStorage.setItem('ghst_user', JSON.stringify(userProfile));
+      
+      setUser(userProfile);
+
+      router.push('/'); 
       router.refresh();
-    } catch (error) {
-      alert("Credenciales incorrectas o error en el servidor");
+    } catch (error: any) {
+      console.error("Login Error:", error);
     } finally {
       setLoading(false);
     }
   };
-
   return (
 <div className="relative min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 transition-colors duration-500 overflow-hidden px-4">
-  {/* Decoración de fondo dinámica */}
+
   <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-blue-500/10 dark:bg-blue-900/20 blur-[120px]" />
   <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-500/10 dark:bg-indigo-900/20 blur-[120px]" />
 
